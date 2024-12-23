@@ -1477,4 +1477,9 @@ constexpr auto struct_tie(T& t) noexcept
   return details::struct_tie_h<field_count_v<T>>::f(t);
 }
 
+template<std::size_t I, typename T>
+using tuple_element_t =
+  std::remove_reference_t<
+    std::tuple_element_t<I, decltype(struct_tie(std::declval<T&>()))>>;
+
 } //namespace aggr_refl

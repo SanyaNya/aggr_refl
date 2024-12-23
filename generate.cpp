@@ -23,23 +23,23 @@ struct any_type
 };
 
 template<typename T, typename IS, typename = void>
-struct field_count_is : std::false_type{};
+struct tuple_size_is : std::false_type{};
 
 template<typename T, std::size_t ... Is>
-struct field_count_is<
+struct tuple_size_is<
   T, 
   std::index_sequence<Is...>, 
   std::void_t<decltype(T{{any_type{Is}}...})>> 
     : std::true_type{};
 
 template<typename T, std::size_t N>
-constexpr bool field_count_n = field_count_is<T, std::make_index_sequence<N>>::value;
+constexpr bool tuple_size_n = tuple_size_is<T, std::make_index_sequence<N>>::value;
 
-template<typename T, std::size_t N = 0, bool = field_count_n<T, N>>
-struct field_count : field_count<T, N+1> {};
+template<typename T, std::size_t N = 0, bool = tuple_size_n<T, N>>
+struct tuple_size : tuple_size<T, N+1> {};
 
 template<typename T, std::size_t N>
-struct field_count<T, N, false> : std::integral_constant<std::size_t, N-1>
+struct tuple_size<T, N, false> : std::integral_constant<std::size_t, N-1>
 {
   static_assert(N != 0, "T is not aggregate initializable");
 };
@@ -47,16 +47,16 @@ struct field_count<T, N, false> : std::integral_constant<std::size_t, N-1>
 } //namespace details
 
 template<typename T>
-constexpr std::size_t field_count_v = details::field_count<T>::value;
+constexpr std::size_t tuple_size_v = details::tuple_size<T>::value;
 
 namespace details
 {
 
 template<std::size_t N>
-struct struct_tie_h;
+struct tie_h;
 
 template<>
-struct struct_tie_h<0>
+struct tie_h<0>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -66,9 +66,9 @@ struct struct_tie_h<0>
 };
 )";
 
-constexpr std::string_view struct_tie = R"(
+constexpr std::string_view tie = R"(
 template<>
-struct struct_tie_h<{0}>
+struct tie_h<{0}>
 {{
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -83,15 +83,15 @@ constexpr std::string_view end = R"(
 } //namespace details
 
 template<typename T>
-constexpr auto struct_tie(T& t) noexcept
+constexpr auto tie(T& t) noexcept
 {
-  return details::struct_tie_h<field_count_v<T>>::f(t);
+  return details::tie_h<tuple_size_v<T>>::f(t);
 }
 
 template<std::size_t I, typename T>
 using tuple_element_t =
   std::remove_reference_t<
-    std::tuple_element_t<I, decltype(struct_tie(std::declval<T&>()))>>;
+    std::tuple_element_t<I, decltype(tie(std::declval<T&>()))>>;
 
 } //namespace aggr_refl
 )";
@@ -108,7 +108,7 @@ int main()
   std::string decltype_vars = "decltype(v0)&";
   for(unsigned i = 0; i != MAX_FIELDS; ++i)
   {
-    of << std::format(struct_tie, i+1, vars, decltype_vars);
+    of << std::format(tie, i+1, vars, decltype_vars);
     vars += std::format(", v{}", i+1);
     decltype_vars += std::format(", decltype(v{})&", i+1);
   }

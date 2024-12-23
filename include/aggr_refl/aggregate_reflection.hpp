@@ -19,23 +19,23 @@ struct any_type
 };
 
 template<typename T, typename IS, typename = void>
-struct field_count_is : std::false_type{};
+struct tuple_size_is : std::false_type{};
 
 template<typename T, std::size_t ... Is>
-struct field_count_is<
+struct tuple_size_is<
   T, 
   std::index_sequence<Is...>, 
   std::void_t<decltype(T{{any_type{Is}}...})>> 
     : std::true_type{};
 
 template<typename T, std::size_t N>
-constexpr bool field_count_n = field_count_is<T, std::make_index_sequence<N>>::value;
+constexpr bool tuple_size_n = tuple_size_is<T, std::make_index_sequence<N>>::value;
 
-template<typename T, std::size_t N = 0, bool = field_count_n<T, N>>
-struct field_count : field_count<T, N+1> {};
+template<typename T, std::size_t N = 0, bool = tuple_size_n<T, N>>
+struct tuple_size : tuple_size<T, N+1> {};
 
 template<typename T, std::size_t N>
-struct field_count<T, N, false> : std::integral_constant<std::size_t, N-1>
+struct tuple_size<T, N, false> : std::integral_constant<std::size_t, N-1>
 {
   static_assert(N != 0, "T is not aggregate initializable");
 };
@@ -43,16 +43,16 @@ struct field_count<T, N, false> : std::integral_constant<std::size_t, N-1>
 } //namespace details
 
 template<typename T>
-constexpr std::size_t field_count_v = details::field_count<T>::value;
+constexpr std::size_t tuple_size_v = details::tuple_size<T>::value;
 
 namespace details
 {
 
 template<std::size_t N>
-struct struct_tie_h;
+struct tie_h;
 
 template<>
-struct struct_tie_h<0>
+struct tie_h<0>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -62,7 +62,7 @@ struct struct_tie_h<0>
 };
 
 template<>
-struct struct_tie_h<1>
+struct tie_h<1>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -73,7 +73,7 @@ struct struct_tie_h<1>
 };
 
 template<>
-struct struct_tie_h<2>
+struct tie_h<2>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -84,7 +84,7 @@ struct struct_tie_h<2>
 };
 
 template<>
-struct struct_tie_h<3>
+struct tie_h<3>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -95,7 +95,7 @@ struct struct_tie_h<3>
 };
 
 template<>
-struct struct_tie_h<4>
+struct tie_h<4>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -106,7 +106,7 @@ struct struct_tie_h<4>
 };
 
 template<>
-struct struct_tie_h<5>
+struct tie_h<5>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -117,7 +117,7 @@ struct struct_tie_h<5>
 };
 
 template<>
-struct struct_tie_h<6>
+struct tie_h<6>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -128,7 +128,7 @@ struct struct_tie_h<6>
 };
 
 template<>
-struct struct_tie_h<7>
+struct tie_h<7>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -139,7 +139,7 @@ struct struct_tie_h<7>
 };
 
 template<>
-struct struct_tie_h<8>
+struct tie_h<8>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -150,7 +150,7 @@ struct struct_tie_h<8>
 };
 
 template<>
-struct struct_tie_h<9>
+struct tie_h<9>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -161,7 +161,7 @@ struct struct_tie_h<9>
 };
 
 template<>
-struct struct_tie_h<10>
+struct tie_h<10>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -172,7 +172,7 @@ struct struct_tie_h<10>
 };
 
 template<>
-struct struct_tie_h<11>
+struct tie_h<11>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -183,7 +183,7 @@ struct struct_tie_h<11>
 };
 
 template<>
-struct struct_tie_h<12>
+struct tie_h<12>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -194,7 +194,7 @@ struct struct_tie_h<12>
 };
 
 template<>
-struct struct_tie_h<13>
+struct tie_h<13>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -205,7 +205,7 @@ struct struct_tie_h<13>
 };
 
 template<>
-struct struct_tie_h<14>
+struct tie_h<14>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -216,7 +216,7 @@ struct struct_tie_h<14>
 };
 
 template<>
-struct struct_tie_h<15>
+struct tie_h<15>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -227,7 +227,7 @@ struct struct_tie_h<15>
 };
 
 template<>
-struct struct_tie_h<16>
+struct tie_h<16>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -238,7 +238,7 @@ struct struct_tie_h<16>
 };
 
 template<>
-struct struct_tie_h<17>
+struct tie_h<17>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -249,7 +249,7 @@ struct struct_tie_h<17>
 };
 
 template<>
-struct struct_tie_h<18>
+struct tie_h<18>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -260,7 +260,7 @@ struct struct_tie_h<18>
 };
 
 template<>
-struct struct_tie_h<19>
+struct tie_h<19>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -271,7 +271,7 @@ struct struct_tie_h<19>
 };
 
 template<>
-struct struct_tie_h<20>
+struct tie_h<20>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -282,7 +282,7 @@ struct struct_tie_h<20>
 };
 
 template<>
-struct struct_tie_h<21>
+struct tie_h<21>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -293,7 +293,7 @@ struct struct_tie_h<21>
 };
 
 template<>
-struct struct_tie_h<22>
+struct tie_h<22>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -304,7 +304,7 @@ struct struct_tie_h<22>
 };
 
 template<>
-struct struct_tie_h<23>
+struct tie_h<23>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -315,7 +315,7 @@ struct struct_tie_h<23>
 };
 
 template<>
-struct struct_tie_h<24>
+struct tie_h<24>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -326,7 +326,7 @@ struct struct_tie_h<24>
 };
 
 template<>
-struct struct_tie_h<25>
+struct tie_h<25>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -337,7 +337,7 @@ struct struct_tie_h<25>
 };
 
 template<>
-struct struct_tie_h<26>
+struct tie_h<26>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -348,7 +348,7 @@ struct struct_tie_h<26>
 };
 
 template<>
-struct struct_tie_h<27>
+struct tie_h<27>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -359,7 +359,7 @@ struct struct_tie_h<27>
 };
 
 template<>
-struct struct_tie_h<28>
+struct tie_h<28>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -370,7 +370,7 @@ struct struct_tie_h<28>
 };
 
 template<>
-struct struct_tie_h<29>
+struct tie_h<29>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -381,7 +381,7 @@ struct struct_tie_h<29>
 };
 
 template<>
-struct struct_tie_h<30>
+struct tie_h<30>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -392,7 +392,7 @@ struct struct_tie_h<30>
 };
 
 template<>
-struct struct_tie_h<31>
+struct tie_h<31>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -403,7 +403,7 @@ struct struct_tie_h<31>
 };
 
 template<>
-struct struct_tie_h<32>
+struct tie_h<32>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -414,7 +414,7 @@ struct struct_tie_h<32>
 };
 
 template<>
-struct struct_tie_h<33>
+struct tie_h<33>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -425,7 +425,7 @@ struct struct_tie_h<33>
 };
 
 template<>
-struct struct_tie_h<34>
+struct tie_h<34>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -436,7 +436,7 @@ struct struct_tie_h<34>
 };
 
 template<>
-struct struct_tie_h<35>
+struct tie_h<35>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -447,7 +447,7 @@ struct struct_tie_h<35>
 };
 
 template<>
-struct struct_tie_h<36>
+struct tie_h<36>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -458,7 +458,7 @@ struct struct_tie_h<36>
 };
 
 template<>
-struct struct_tie_h<37>
+struct tie_h<37>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -469,7 +469,7 @@ struct struct_tie_h<37>
 };
 
 template<>
-struct struct_tie_h<38>
+struct tie_h<38>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -480,7 +480,7 @@ struct struct_tie_h<38>
 };
 
 template<>
-struct struct_tie_h<39>
+struct tie_h<39>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -491,7 +491,7 @@ struct struct_tie_h<39>
 };
 
 template<>
-struct struct_tie_h<40>
+struct tie_h<40>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -502,7 +502,7 @@ struct struct_tie_h<40>
 };
 
 template<>
-struct struct_tie_h<41>
+struct tie_h<41>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -513,7 +513,7 @@ struct struct_tie_h<41>
 };
 
 template<>
-struct struct_tie_h<42>
+struct tie_h<42>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -524,7 +524,7 @@ struct struct_tie_h<42>
 };
 
 template<>
-struct struct_tie_h<43>
+struct tie_h<43>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -535,7 +535,7 @@ struct struct_tie_h<43>
 };
 
 template<>
-struct struct_tie_h<44>
+struct tie_h<44>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -546,7 +546,7 @@ struct struct_tie_h<44>
 };
 
 template<>
-struct struct_tie_h<45>
+struct tie_h<45>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -557,7 +557,7 @@ struct struct_tie_h<45>
 };
 
 template<>
-struct struct_tie_h<46>
+struct tie_h<46>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -568,7 +568,7 @@ struct struct_tie_h<46>
 };
 
 template<>
-struct struct_tie_h<47>
+struct tie_h<47>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -579,7 +579,7 @@ struct struct_tie_h<47>
 };
 
 template<>
-struct struct_tie_h<48>
+struct tie_h<48>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -590,7 +590,7 @@ struct struct_tie_h<48>
 };
 
 template<>
-struct struct_tie_h<49>
+struct tie_h<49>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -601,7 +601,7 @@ struct struct_tie_h<49>
 };
 
 template<>
-struct struct_tie_h<50>
+struct tie_h<50>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -612,7 +612,7 @@ struct struct_tie_h<50>
 };
 
 template<>
-struct struct_tie_h<51>
+struct tie_h<51>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -623,7 +623,7 @@ struct struct_tie_h<51>
 };
 
 template<>
-struct struct_tie_h<52>
+struct tie_h<52>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -634,7 +634,7 @@ struct struct_tie_h<52>
 };
 
 template<>
-struct struct_tie_h<53>
+struct tie_h<53>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -645,7 +645,7 @@ struct struct_tie_h<53>
 };
 
 template<>
-struct struct_tie_h<54>
+struct tie_h<54>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -656,7 +656,7 @@ struct struct_tie_h<54>
 };
 
 template<>
-struct struct_tie_h<55>
+struct tie_h<55>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -667,7 +667,7 @@ struct struct_tie_h<55>
 };
 
 template<>
-struct struct_tie_h<56>
+struct tie_h<56>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -678,7 +678,7 @@ struct struct_tie_h<56>
 };
 
 template<>
-struct struct_tie_h<57>
+struct tie_h<57>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -689,7 +689,7 @@ struct struct_tie_h<57>
 };
 
 template<>
-struct struct_tie_h<58>
+struct tie_h<58>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -700,7 +700,7 @@ struct struct_tie_h<58>
 };
 
 template<>
-struct struct_tie_h<59>
+struct tie_h<59>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -711,7 +711,7 @@ struct struct_tie_h<59>
 };
 
 template<>
-struct struct_tie_h<60>
+struct tie_h<60>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -722,7 +722,7 @@ struct struct_tie_h<60>
 };
 
 template<>
-struct struct_tie_h<61>
+struct tie_h<61>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -733,7 +733,7 @@ struct struct_tie_h<61>
 };
 
 template<>
-struct struct_tie_h<62>
+struct tie_h<62>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -744,7 +744,7 @@ struct struct_tie_h<62>
 };
 
 template<>
-struct struct_tie_h<63>
+struct tie_h<63>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -755,7 +755,7 @@ struct struct_tie_h<63>
 };
 
 template<>
-struct struct_tie_h<64>
+struct tie_h<64>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -766,7 +766,7 @@ struct struct_tie_h<64>
 };
 
 template<>
-struct struct_tie_h<65>
+struct tie_h<65>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -777,7 +777,7 @@ struct struct_tie_h<65>
 };
 
 template<>
-struct struct_tie_h<66>
+struct tie_h<66>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -788,7 +788,7 @@ struct struct_tie_h<66>
 };
 
 template<>
-struct struct_tie_h<67>
+struct tie_h<67>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -799,7 +799,7 @@ struct struct_tie_h<67>
 };
 
 template<>
-struct struct_tie_h<68>
+struct tie_h<68>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -810,7 +810,7 @@ struct struct_tie_h<68>
 };
 
 template<>
-struct struct_tie_h<69>
+struct tie_h<69>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -821,7 +821,7 @@ struct struct_tie_h<69>
 };
 
 template<>
-struct struct_tie_h<70>
+struct tie_h<70>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -832,7 +832,7 @@ struct struct_tie_h<70>
 };
 
 template<>
-struct struct_tie_h<71>
+struct tie_h<71>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -843,7 +843,7 @@ struct struct_tie_h<71>
 };
 
 template<>
-struct struct_tie_h<72>
+struct tie_h<72>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -854,7 +854,7 @@ struct struct_tie_h<72>
 };
 
 template<>
-struct struct_tie_h<73>
+struct tie_h<73>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -865,7 +865,7 @@ struct struct_tie_h<73>
 };
 
 template<>
-struct struct_tie_h<74>
+struct tie_h<74>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -876,7 +876,7 @@ struct struct_tie_h<74>
 };
 
 template<>
-struct struct_tie_h<75>
+struct tie_h<75>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -887,7 +887,7 @@ struct struct_tie_h<75>
 };
 
 template<>
-struct struct_tie_h<76>
+struct tie_h<76>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -898,7 +898,7 @@ struct struct_tie_h<76>
 };
 
 template<>
-struct struct_tie_h<77>
+struct tie_h<77>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -909,7 +909,7 @@ struct struct_tie_h<77>
 };
 
 template<>
-struct struct_tie_h<78>
+struct tie_h<78>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -920,7 +920,7 @@ struct struct_tie_h<78>
 };
 
 template<>
-struct struct_tie_h<79>
+struct tie_h<79>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -931,7 +931,7 @@ struct struct_tie_h<79>
 };
 
 template<>
-struct struct_tie_h<80>
+struct tie_h<80>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -942,7 +942,7 @@ struct struct_tie_h<80>
 };
 
 template<>
-struct struct_tie_h<81>
+struct tie_h<81>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -953,7 +953,7 @@ struct struct_tie_h<81>
 };
 
 template<>
-struct struct_tie_h<82>
+struct tie_h<82>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -964,7 +964,7 @@ struct struct_tie_h<82>
 };
 
 template<>
-struct struct_tie_h<83>
+struct tie_h<83>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -975,7 +975,7 @@ struct struct_tie_h<83>
 };
 
 template<>
-struct struct_tie_h<84>
+struct tie_h<84>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -986,7 +986,7 @@ struct struct_tie_h<84>
 };
 
 template<>
-struct struct_tie_h<85>
+struct tie_h<85>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -997,7 +997,7 @@ struct struct_tie_h<85>
 };
 
 template<>
-struct struct_tie_h<86>
+struct tie_h<86>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1008,7 +1008,7 @@ struct struct_tie_h<86>
 };
 
 template<>
-struct struct_tie_h<87>
+struct tie_h<87>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1019,7 +1019,7 @@ struct struct_tie_h<87>
 };
 
 template<>
-struct struct_tie_h<88>
+struct tie_h<88>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1030,7 +1030,7 @@ struct struct_tie_h<88>
 };
 
 template<>
-struct struct_tie_h<89>
+struct tie_h<89>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1041,7 +1041,7 @@ struct struct_tie_h<89>
 };
 
 template<>
-struct struct_tie_h<90>
+struct tie_h<90>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1052,7 +1052,7 @@ struct struct_tie_h<90>
 };
 
 template<>
-struct struct_tie_h<91>
+struct tie_h<91>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1063,7 +1063,7 @@ struct struct_tie_h<91>
 };
 
 template<>
-struct struct_tie_h<92>
+struct tie_h<92>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1074,7 +1074,7 @@ struct struct_tie_h<92>
 };
 
 template<>
-struct struct_tie_h<93>
+struct tie_h<93>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1085,7 +1085,7 @@ struct struct_tie_h<93>
 };
 
 template<>
-struct struct_tie_h<94>
+struct tie_h<94>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1096,7 +1096,7 @@ struct struct_tie_h<94>
 };
 
 template<>
-struct struct_tie_h<95>
+struct tie_h<95>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1107,7 +1107,7 @@ struct struct_tie_h<95>
 };
 
 template<>
-struct struct_tie_h<96>
+struct tie_h<96>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1118,7 +1118,7 @@ struct struct_tie_h<96>
 };
 
 template<>
-struct struct_tie_h<97>
+struct tie_h<97>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1129,7 +1129,7 @@ struct struct_tie_h<97>
 };
 
 template<>
-struct struct_tie_h<98>
+struct tie_h<98>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1140,7 +1140,7 @@ struct struct_tie_h<98>
 };
 
 template<>
-struct struct_tie_h<99>
+struct tie_h<99>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1151,7 +1151,7 @@ struct struct_tie_h<99>
 };
 
 template<>
-struct struct_tie_h<100>
+struct tie_h<100>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1162,7 +1162,7 @@ struct struct_tie_h<100>
 };
 
 template<>
-struct struct_tie_h<101>
+struct tie_h<101>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1173,7 +1173,7 @@ struct struct_tie_h<101>
 };
 
 template<>
-struct struct_tie_h<102>
+struct tie_h<102>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1184,7 +1184,7 @@ struct struct_tie_h<102>
 };
 
 template<>
-struct struct_tie_h<103>
+struct tie_h<103>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1195,7 +1195,7 @@ struct struct_tie_h<103>
 };
 
 template<>
-struct struct_tie_h<104>
+struct tie_h<104>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1206,7 +1206,7 @@ struct struct_tie_h<104>
 };
 
 template<>
-struct struct_tie_h<105>
+struct tie_h<105>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1217,7 +1217,7 @@ struct struct_tie_h<105>
 };
 
 template<>
-struct struct_tie_h<106>
+struct tie_h<106>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1228,7 +1228,7 @@ struct struct_tie_h<106>
 };
 
 template<>
-struct struct_tie_h<107>
+struct tie_h<107>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1239,7 +1239,7 @@ struct struct_tie_h<107>
 };
 
 template<>
-struct struct_tie_h<108>
+struct tie_h<108>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1250,7 +1250,7 @@ struct struct_tie_h<108>
 };
 
 template<>
-struct struct_tie_h<109>
+struct tie_h<109>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1261,7 +1261,7 @@ struct struct_tie_h<109>
 };
 
 template<>
-struct struct_tie_h<110>
+struct tie_h<110>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1272,7 +1272,7 @@ struct struct_tie_h<110>
 };
 
 template<>
-struct struct_tie_h<111>
+struct tie_h<111>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1283,7 +1283,7 @@ struct struct_tie_h<111>
 };
 
 template<>
-struct struct_tie_h<112>
+struct tie_h<112>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1294,7 +1294,7 @@ struct struct_tie_h<112>
 };
 
 template<>
-struct struct_tie_h<113>
+struct tie_h<113>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1305,7 +1305,7 @@ struct struct_tie_h<113>
 };
 
 template<>
-struct struct_tie_h<114>
+struct tie_h<114>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1316,7 +1316,7 @@ struct struct_tie_h<114>
 };
 
 template<>
-struct struct_tie_h<115>
+struct tie_h<115>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1327,7 +1327,7 @@ struct struct_tie_h<115>
 };
 
 template<>
-struct struct_tie_h<116>
+struct tie_h<116>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1338,7 +1338,7 @@ struct struct_tie_h<116>
 };
 
 template<>
-struct struct_tie_h<117>
+struct tie_h<117>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1349,7 +1349,7 @@ struct struct_tie_h<117>
 };
 
 template<>
-struct struct_tie_h<118>
+struct tie_h<118>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1360,7 +1360,7 @@ struct struct_tie_h<118>
 };
 
 template<>
-struct struct_tie_h<119>
+struct tie_h<119>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1371,7 +1371,7 @@ struct struct_tie_h<119>
 };
 
 template<>
-struct struct_tie_h<120>
+struct tie_h<120>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1382,7 +1382,7 @@ struct struct_tie_h<120>
 };
 
 template<>
-struct struct_tie_h<121>
+struct tie_h<121>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1393,7 +1393,7 @@ struct struct_tie_h<121>
 };
 
 template<>
-struct struct_tie_h<122>
+struct tie_h<122>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1404,7 +1404,7 @@ struct struct_tie_h<122>
 };
 
 template<>
-struct struct_tie_h<123>
+struct tie_h<123>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1415,7 +1415,7 @@ struct struct_tie_h<123>
 };
 
 template<>
-struct struct_tie_h<124>
+struct tie_h<124>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1426,7 +1426,7 @@ struct struct_tie_h<124>
 };
 
 template<>
-struct struct_tie_h<125>
+struct tie_h<125>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1437,7 +1437,7 @@ struct struct_tie_h<125>
 };
 
 template<>
-struct struct_tie_h<126>
+struct tie_h<126>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1448,7 +1448,7 @@ struct struct_tie_h<126>
 };
 
 template<>
-struct struct_tie_h<127>
+struct tie_h<127>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1459,7 +1459,7 @@ struct struct_tie_h<127>
 };
 
 template<>
-struct struct_tie_h<128>
+struct tie_h<128>
 {
   template<typename T>
   static constexpr auto f(T& t) noexcept
@@ -1472,14 +1472,14 @@ struct struct_tie_h<128>
 } //namespace details
 
 template<typename T>
-constexpr auto struct_tie(T& t) noexcept
+constexpr auto tie(T& t) noexcept
 {
-  return details::struct_tie_h<field_count_v<T>>::f(t);
+  return details::tie_h<tuple_size_v<T>>::f(t);
 }
 
 template<std::size_t I, typename T>
 using tuple_element_t =
   std::remove_reference_t<
-    std::tuple_element_t<I, decltype(struct_tie(std::declval<T&>()))>>;
+    std::tuple_element_t<I, decltype(tie(std::declval<T&>()))>>;
 
 } //namespace aggr_refl

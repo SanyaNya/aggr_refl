@@ -1478,6 +1478,12 @@ constexpr auto tie(T& t) noexcept
 }
 
 template<std::size_t I, typename T>
+constexpr auto& get(T& t) noexcept
+{
+  return std::get<I>(tie(t));
+}
+
+template<std::size_t I, typename T>
 using tuple_element_t =
   std::remove_reference_t<
     std::tuple_element_t<I, decltype(tie(std::declval<T&>()))>>;

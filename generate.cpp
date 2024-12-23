@@ -39,12 +39,14 @@ template<typename T, std::size_t N = 0, bool = field_count_n<T, N>>
 struct field_count : field_count<T, N+1> {};
 
 template<typename T, std::size_t N>
-struct field_count<T, N, false> : std::integral_constant<std::size_t, N-1> {};
+struct field_count<T, N, false> : std::integral_constant<std::size_t, N-1>
+{
+  static_assert(N != 0, "T is not aggregate initializable");
+};
 
 } //namespace details
 
 template<typename T>
-  requires std::is_aggregate_v<T>
 constexpr std::size_t field_count_v = details::field_count<T>::value;
 
 namespace details
@@ -81,7 +83,6 @@ constexpr std::string_view end = R"(
 } //namespace details
 
 template<typename T>
-  requires std::is_aggregate_v<T>
 constexpr auto struct_tie(T& t) noexcept
 {
   return details::struct_tie_h<field_count_v<T>>::f(t);

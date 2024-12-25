@@ -53,7 +53,10 @@ namespace details
 {
 
 template<std::size_t N>
-struct tie_h;
+struct tie_h
+{
+  static_assert(false, "Number of fields exceeded");
+};
 
 template<>
 struct tie_h<0>
